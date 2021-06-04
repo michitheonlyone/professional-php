@@ -16,11 +16,13 @@
     "symfony/http-foundation": "^5.3",
     "nikic/fast-route": "^1.3",
     "twig/twig": "^3.3",
-    "rdlowrey/auryn": "^1.4"
+    "rdlowrey/auryn": "^1.4",
+    "doctrine/dbal": "^3.1"
   },
   "autoload": {
     "psr-4": {
-      "Socialnews\\": "src/"
+      "Socialnews\\": "src/",
+      "Migrations\\": "migrations/"
     }
   }
 }
