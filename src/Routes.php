@@ -10,5 +10,10 @@ return [
         'GET',
         '/submit',
         'Socialnews\Submission\Presentation\SubmissionController#show'
+    ],
+    [
+        'POST',
+        '/submit',
+        'Socialnews\Submission\Presentation\SubmissionController#submit'
     ]
 ];
