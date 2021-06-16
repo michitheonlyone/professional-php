@@ -2,6 +2,8 @@
 
 namespace Socialnews\Framework\Rendering;
 
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Loader\FilesystemLoader;
 // use Twig_Loader_Filesystem
 use Twig\Environment;
@@ -13,11 +15,16 @@ final class TwigTemplateRendererFactory
 {
     private $templateDirectory;
     private $storedTokenReader;
+    private $session;
 
-    public function __construct(TemplateDirectory $templateDirectory, StoredTokenReader $storedTokenReader)
-    {
+    public function __construct(
+        TemplateDirectory $templateDirectory,
+        StoredTokenReader $storedTokenReader,
+        Session $session
+    ) {
         $this->templateDirectory = $templateDirectory;
         $this->storedTokenReader = $storedTokenReader;
+        $this->session = $session;
     }
 
     public function create(): TwigTemplateRenderer
@@ -29,6 +36,11 @@ final class TwigTemplateRendererFactory
             new TwigFunction('get_token', function (string $key): string {
                 $token = $this->storedTokenReader->read($key);
                 return $token->toString();
+            })
+        );
+        $twigEnvironment->addFunction(
+            new TwigFunction('get_flash_bag', function(): FlashBagInterface {
+                return $this->session->getFlashBag();
             })
         );
         return new TwigTemplateRenderer($twigEnvironment);

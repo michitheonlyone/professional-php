@@ -1,6 +1,7 @@
 {% extends 'Layout.html.twig' %}
 
 {% block content %}
+    {% include 'FlashMessages.html.twig' %}
 <form method="post">
     <input type="text" name="token" value="{{ get_token('submission') }}" hidden="hidden">
     <label for="submission-title">Title</label>

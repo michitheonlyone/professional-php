@@ -2,6 +2,12 @@
 
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
+use Socialnews\Submission\Domain\SubmissionRepository;
+use Socialnews\Submission\Infrastructure\DbalSubmissionRepository;
+use Socialnews\User\Application\NicknameTakenQuery;
+use Socialnews\User\Domain\UserRepository;
+use Socialnews\User\Infrastructure\DbalNicknameTakenQuery;
+use Socialnews\User\Infrastructure\DbalUserRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Socialnews\Framework\Rendering\TemplateDirectory;
@@ -13,6 +19,8 @@ use Socialnews\Framework\Csrf\TokenStorage;
 use Socialnews\Framework\Csrf\SymfonySessionTokenStorage;
 use Socialnews\Frontpage\Infrastructure\DbalSubmissionsQuery;
 use Socialnews\Frontpage\Application\SubmissionsQuery;
+use Socialnews\Framework\Rbac\User;
+use Socialnews\Framework\Rbac\SymfonySessionCurrentUserFactory;
 
 $injector = new Injector();
 
@@ -39,5 +47,13 @@ $injector->delegate(
         return $factory->create();
     }
 );
+
+$injector->alias(SubmissionRepository::class, DbalSubmissionRepository::class);
+$injector->alias(UserRepository::class, DbalUserRepository::class);
+$injector->alias(NicknameTakenQuery::class, DbalNicknameTakenQuery::class);
+$injector->delegate(User::class, function () use ($injector): User {
+    $factory = $injector->make(SymfonySessionCurrentUserFactory::class);
+    return $factory->create();
+});
 
 return $injector;

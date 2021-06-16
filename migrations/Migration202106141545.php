@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 
-final class Migration202104061429
+final class Migration202106141545
 {
     private $connection;
 
@@ -28,10 +28,12 @@ final class Migration202104061429
 
     private function createSubmissionTable(Schema $schema): void
     {
-        $table = $schema->createTable('submissions');
+        $table = $schema->createTable('users');
         $table->addColumn('id', Types::GUID);
-        $table->addColumn('title', Types::STRING);
-        $table->addColumn('url', Types::STRING);
+        $table->addColumn('nickname', Types::STRING);
+        $table->addColumn('password_hash', Types::STRING);
         $table->addColumn('creation_date', Types::DATETIME_MUTABLE);
+        $table->addColumn('failed_login_attempts', Types::INTEGER, ['default' => 0]);
+        $table->addColumn('last_failed_login_attempt', Types::DATETIME_MUTABLE, ['notnull' => false]);
     }
 }
